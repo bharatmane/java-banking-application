@@ -5,7 +5,6 @@ import io.github.bharatmane.banking.entity.Customer;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-
 public class Prompter {
     private final PrintStream stdOut;
     private Scanner scanner;
