@@ -31,6 +31,39 @@ public class BankingService {
 
             var customer = customers.stream().filter(c-> c.getName().equals(userName)).findFirst()
                     .orElse(null);
+            if(customer !=null){
+               chosenOption = prompter.promptAccountMenu();
+               processAccountMenu(chosenOption);
+            }
         }
+    }
+
+    private void processAccountMenu(int chosenOption) {
+        switch(chosenOption){
+            case 1:
+                deposit();
+                break;
+            case 2:
+                withdraw();
+                break;
+            case 3:
+                transfer();
+                break;
+            case 4:
+                logout();
+                break;
+        }
+    }
+
+    private void withdraw() {
+    }
+
+    private void deposit() {
+    }
+
+    private void transfer() {
+    }
+
+    private void logout() {
     }
 }

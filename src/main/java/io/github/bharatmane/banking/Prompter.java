@@ -52,4 +52,15 @@ public class Prompter {
         prompt();
         return lastInput;
     }
+
+    public int promptAccountMenu() {
+        print("Welcome to your account services, please choose of the option shown below");
+        print("1 Deposit");
+        print("2 Withdraw");
+        print("3 Transfer");
+        print("4 Logout");
+        print("Enter your choice");
+        prompt();
+        return Integer.parseInt(lastInput);
+    }
 }

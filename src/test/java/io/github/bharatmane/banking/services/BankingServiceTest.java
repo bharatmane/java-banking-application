@@ -30,8 +30,6 @@ public class BankingServiceTest {
                 new Customer("jack","jack@123"),
                 new Customer("jill","jill@123")
         ));
-        Scanner scanner = new Scanner("1\njack\njack@123\n");
-        prompter = new Prompter(printStream,scanner);
 
     }
 
@@ -39,6 +37,8 @@ public class BankingServiceTest {
     @Test
     @DisplayName("Should have valid list of customers when initialized")
     void  shouldHaveValidListOfCustomersWhenInitialized(){
+        Scanner scanner = new Scanner("1\njack\njack@123\n");
+        prompter = new Prompter(printStream,scanner);
 
         //Given
         BankingService bankingService = new BankingService(customers, prompter);
@@ -52,15 +52,18 @@ public class BankingServiceTest {
     @Test
     @DisplayName("Should show accounts menu when logged in with correct credentials")
     void  shouldShowAccountsMenuWhenLoggedInWithCorrectCredentials(){
+        Scanner scanner = new Scanner("1\njack\njack@123\n1");
+        prompter = new Prompter(printStream,scanner);
 
         //Given
         BankingService bankingService = new BankingService(customers,prompter);
 
         //When
         bankingService.greet();
+        bankingService.login();
 
         //Then
-        assertThat(outputStream.toString()).contains("1. Withdrawal");
+        assertThat(outputStream.toString()).contains("1 Deposit");
     }
 
 }
