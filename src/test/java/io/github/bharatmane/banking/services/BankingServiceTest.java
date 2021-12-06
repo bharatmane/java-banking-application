@@ -2,6 +2,7 @@ package io.github.bharatmane.banking.services;
 
 import io.github.bharatmane.banking.Prompter;
 import io.github.bharatmane.banking.entity.Customer;
+import io.github.bharatmane.banking.exception.InSufficientFundsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,8 +52,8 @@ public class BankingServiceTest {
 
     @Test
     @DisplayName("Should show accounts menu when logged in with correct credentials")
-    void  shouldShowAccountsMenuWhenLoggedInWithCorrectCredentials(){
-        Scanner scanner = new Scanner("1\n1234\njack@123\n1\n100");
+    void  shouldShowAccountsMenuWhenLoggedInWithCorrectCredentials() {
+        Scanner scanner = new Scanner("1\n1234\njack@123\n1\n");
         prompter = new Prompter(printStream,scanner);
 
         //Given
@@ -60,10 +61,10 @@ public class BankingServiceTest {
 
         //When
         bankingService.greet();
-        bankingService.login();
+        Customer customer = bankingService.login();
 
         //Then
-        assertThat(outputStream.toString()).contains("1 Deposit");
+        assertThat(customer.isLoggedIn());
     }
 
     @Test
@@ -82,40 +83,5 @@ public class BankingServiceTest {
         //Then
         assertThat(outputStream.toString()).contains("Invalid user name or password");
     }
-
-    @Test
-    @DisplayName("Should increase balance when deposited")
-    void  shouldIncreaseBalanceWhenDeposited(){
-        Scanner scanner = new Scanner("1\n1234\njack@123\n1\n135.4");
-        prompter = new Prompter(printStream,scanner);
-        String expectedBalance = "235.5";
-        //Given
-        BankingService bankingService = new BankingService(customers,prompter);
-
-        //When
-        bankingService.greet();
-        Customer customer = bankingService.login();
-
-        //Then
-        assertThat(customer.getAccountBalance()).isEqualTo(expectedBalance);
-    }
-
-    @Test
-    @DisplayName("Should decrease balance when withdrawal")
-    void  shouldDecreaseBalanceWhenWithdrawal(){
-        Scanner scanner = new Scanner("1\n1234\njack@123\n2\n76.6");
-        prompter = new Prompter(printStream,scanner);
-        String expectedBalance = "23.5";
-        //Given
-        BankingService bankingService = new BankingService(customers,prompter);
-
-        //When
-        bankingService.greet();
-        Customer customer = bankingService.login();
-
-        //Then
-        assertThat(customer.getAccountBalance()).isEqualTo(expectedBalance);
-    }
-
 
 }

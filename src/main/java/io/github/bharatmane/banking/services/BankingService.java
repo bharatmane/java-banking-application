@@ -2,6 +2,7 @@ package io.github.bharatmane.banking.services;
 
 import io.github.bharatmane.banking.Prompter;
 import io.github.bharatmane.banking.entity.Customer;
+import io.github.bharatmane.banking.exception.InSufficientFundsException;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class BankingService {
         prompter.greetUser();
     }
 
-    public Customer login(){
+    public Customer login() {
         Customer customer =  null;
         int chosenOption = prompter.promptLogin();
         if (chosenOption == 1) {
@@ -32,18 +33,19 @@ public class BankingService {
 
             customer = customers.stream().filter(c-> c.getAccountNo().equals(userName)).findFirst()
                     .orElse(null);
-            if(customer !=null && customer.isValidCredentials(password)){
-               chosenOption = prompter.promptAccountMenu();
-               processAccountMenu(customer,chosenOption);
-            }
-            else{
-                prompter.promptInvalidCredentials();
+            if(customer == null || customer.isValidCredentials(password) == false){
+                prompter.printInvalidCredentials();
                 customer = null;
             }
         }
         return customer;
     }
-    private void processAccountMenu(Customer customer, int chosenOption) {
+
+    public void operate(Customer customer) throws InSufficientFundsException {
+        int chosenOption = prompter.promptAccountMenu();
+        processAccountMenu(customer,chosenOption);
+    }
+    private void processAccountMenu(Customer customer, int chosenOption) throws InSufficientFundsException {
         switch(chosenOption){
             case 1:
                 String depositAmount = prompter.promptDeposit();
