@@ -23,51 +23,42 @@ public class BankingService {
         prompter.greetUser();
     }
 
-    public void login(){
+    public Customer login(){
+        Customer customer =  null;
         int chosenOption = prompter.promptLogin();
         if (chosenOption == 1) {
             String userName = prompter.promptUserName();
             String password = prompter.promptPassword();
 
-            var customer = customers.stream().filter(c-> c.getName().equals(userName)).findFirst()
+            customer = customers.stream().filter(c-> c.getAccountNo().equals(userName)).findFirst()
                     .orElse(null);
             if(customer !=null && customer.isValidCredentials(password)){
                chosenOption = prompter.promptAccountMenu();
-               processAccountMenu(chosenOption);
+               processAccountMenu(customer,chosenOption);
             }
             else{
                 prompter.promptInvalidCredentials();
+                customer = null;
             }
-
         }
+        return customer;
     }
-
-    private void processAccountMenu(int chosenOption) {
+    private void processAccountMenu(Customer customer, int chosenOption) {
         switch(chosenOption){
             case 1:
-                deposit();
+                String depositAmount = prompter.promptDeposit();
+                customer.deposit(depositAmount);
                 break;
             case 2:
-                withdraw();
+                String withdrawAmount = prompter.promptWithdraw();
+                customer.withdraw(withdrawAmount);
                 break;
             case 3:
-                transfer();
+                customer.transfer();
                 break;
             case 4:
-                logout();
+                customer.logout();
                 break;
         }
-    }
-
-    private void withdraw() {
-    }
-
-    private void deposit() {
-    }
-
-    private void transfer() {
-    }
-
-    private void logout() {
     }
 }

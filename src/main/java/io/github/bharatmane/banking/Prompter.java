@@ -70,4 +70,16 @@ public class Prompter {
     public void promptInvalidCredentials() {
         print("Invalid user name or password, please try again");
     }
+
+    public String promptDeposit() {
+        print("Please enter the amount to deposit");
+        prompt();
+        return lastInput;
+    }
+
+    public String promptWithdraw() {
+        print("Please enter the amount to withdraw");
+        prompt();
+        return lastInput;
+    }
 }

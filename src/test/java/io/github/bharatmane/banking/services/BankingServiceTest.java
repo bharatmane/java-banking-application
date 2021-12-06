@@ -27,8 +27,8 @@ public class BankingServiceTest {
         outputStream = new ByteArrayOutputStream();
         printStream = new PrintStream(outputStream);
         customers = new ArrayList<Customer>(Arrays.asList(
-                new Customer("jack","jack@123"),
-                new Customer("jill","jill@123")
+                new Customer("1234","jack@123","100.1"),
+                new Customer("1235","jill@123","200.2")
         ));
 
     }
@@ -37,7 +37,7 @@ public class BankingServiceTest {
     @Test
     @DisplayName("Should have valid list of customers when initialized")
     void  shouldHaveValidListOfCustomersWhenInitialized(){
-        Scanner scanner = new Scanner("1\njack\njack@123\n");
+        Scanner scanner = new Scanner("1\n1234\njack@123\n");
         prompter = new Prompter(printStream,scanner);
 
         //Given
@@ -52,7 +52,7 @@ public class BankingServiceTest {
     @Test
     @DisplayName("Should show accounts menu when logged in with correct credentials")
     void  shouldShowAccountsMenuWhenLoggedInWithCorrectCredentials(){
-        Scanner scanner = new Scanner("1\njack\njack@123\n1");
+        Scanner scanner = new Scanner("1\n1234\njack@123\n1\n100");
         prompter = new Prompter(printStream,scanner);
 
         //Given
@@ -82,5 +82,40 @@ public class BankingServiceTest {
         //Then
         assertThat(outputStream.toString()).contains("Invalid user name or password");
     }
+
+    @Test
+    @DisplayName("Should increase balance when deposited")
+    void  shouldIncreaseBalanceWhenDeposited(){
+        Scanner scanner = new Scanner("1\n1234\njack@123\n1\n135.4");
+        prompter = new Prompter(printStream,scanner);
+        String expectedBalance = "235.5";
+        //Given
+        BankingService bankingService = new BankingService(customers,prompter);
+
+        //When
+        bankingService.greet();
+        Customer customer = bankingService.login();
+
+        //Then
+        assertThat(customer.getAccountBalance()).isEqualTo(expectedBalance);
+    }
+
+    @Test
+    @DisplayName("Should decrease balance when withdrawal")
+    void  shouldDecreaseBalanceWhenWithdrawal(){
+        Scanner scanner = new Scanner("1\n1234\njack@123\n2\n76.6");
+        prompter = new Prompter(printStream,scanner);
+        String expectedBalance = "23.5";
+        //Given
+        BankingService bankingService = new BankingService(customers,prompter);
+
+        //When
+        bankingService.greet();
+        Customer customer = bankingService.login();
+
+        //Then
+        assertThat(customer.getAccountBalance()).isEqualTo(expectedBalance);
+    }
+
 
 }
