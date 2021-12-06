@@ -1,26 +1,15 @@
 package io.github.bharatmane.banking.entity;
 
-import io.github.bharatmane.banking.Prompter;
 import io.github.bharatmane.banking.exception.InSufficientFundsException;
-import io.github.bharatmane.banking.services.BankingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CustomerTest {
 
     private Customer customer;
-
 
     @BeforeEach
     public void init() {
