@@ -33,5 +33,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=bharatmane_java-banking-application -Dsonar.tests=src/test/ -Dsonar.verbose=true
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
+                    -Dsonar.projectKey=bharatmane_java-banking-application 
+                    -Dsonar.tests=src/test/ 
+                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                    -Dsonar.verbose=true
 
