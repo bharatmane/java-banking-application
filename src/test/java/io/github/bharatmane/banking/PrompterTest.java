@@ -28,7 +28,7 @@ public class PrompterTest {
     @Test
     @DisplayName("should prompt welcome message")
     void shouldPromptWelcomeMessage(){
-        String expectedGreetMessage = "Welcome to Great Learning Banking Services!";
+        String expectedGreetMessage = "Welcome to Indian Banking Services!";
         Scanner scanner = new Scanner(System.in);
 
         //Given
@@ -44,7 +44,7 @@ public class PrompterTest {
     @Test
     @DisplayName("should prompt login options")
     void shouldPromptLoginOptions(){
-        Scanner scanner = new Scanner("1. Login\n2. Exit\n1");
+        Scanner scanner = new Scanner("1\n");
         String expectedLoginString = "1. Login";
         String expectedExitString = "2. Exit";
         //Given
@@ -66,6 +66,7 @@ public class PrompterTest {
         //Given
         Prompter prompter = new Prompter(printStream,scanner);
         //When
+        prompter.promptLogin();
         prompter.promptUserName();
 
         //Then
