@@ -66,4 +66,21 @@ public class BankingServiceTest {
         assertThat(outputStream.toString()).contains("1 Deposit");
     }
 
+    @Test
+    @DisplayName("Should show invalid login attempt when logged in with incorrect credentials")
+    void  shouldShowInvalidLoginAttemptWhenLoggedInWithIncorrectCredentials(){
+        Scanner scanner = new Scanner("1\njack\njack@125\n1");
+        prompter = new Prompter(printStream,scanner);
+
+        //Given
+        BankingService bankingService = new BankingService(customers,prompter);
+
+        //When
+        bankingService.greet();
+        bankingService.login();
+
+        //Then
+        assertThat(outputStream.toString()).contains("Invalid user name or password");
+    }
+
 }

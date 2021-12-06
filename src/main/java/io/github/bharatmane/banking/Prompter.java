@@ -17,7 +17,8 @@ public class Prompter {
     }
 
     public void greetUser() {
-        print("Welcome to Great Learning Banking Services!");
+        print("Welcome to Indian Banking Services!");
+        print("-------------------------------------------------");
     }
 
     private void print(String message) {
@@ -30,7 +31,8 @@ public class Prompter {
     }
 
     public int promptLogin() {
-        print("Choose Option");
+        print("Please choose one of the option shown below");
+        print("---------------------------------------------------");
         print("1. Login");
         print("2. Exit");
         prompt();
@@ -54,7 +56,8 @@ public class Prompter {
     }
 
     public int promptAccountMenu() {
-        print("Welcome to your account services, please choose of the option shown below");
+        print("Welcome to your account services, please choose one of the option shown below");
+        print("------------------------------------------------------------------------------------");
         print("1 Deposit");
         print("2 Withdraw");
         print("3 Transfer");
@@ -62,5 +65,9 @@ public class Prompter {
         print("Enter your choice");
         prompt();
         return Integer.parseInt(lastInput);
+    }
+
+    public void promptInvalidCredentials() {
+        print("Invalid user name or password, please try again");
     }
 }

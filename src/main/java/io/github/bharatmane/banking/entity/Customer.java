@@ -13,4 +13,8 @@ public class Customer {
     public String getName() {
         return this.name;
     }
+
+    public boolean isValidCredentials(String password) {
+        return this.password.equals(password);
+    }
 }

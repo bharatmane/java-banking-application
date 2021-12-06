@@ -31,10 +31,14 @@ public class BankingService {
 
             var customer = customers.stream().filter(c-> c.getName().equals(userName)).findFirst()
                     .orElse(null);
-            if(customer !=null){
+            if(customer !=null && customer.isValidCredentials(password)){
                chosenOption = prompter.promptAccountMenu();
                processAccountMenu(chosenOption);
             }
+            else{
+                prompter.promptInvalidCredentials();
+            }
+
         }
     }
 
