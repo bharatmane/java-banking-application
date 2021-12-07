@@ -85,9 +85,8 @@ public class BankingServiceTest {
         bankingService.greet();
         bankingService.login();
 
-
         //Then
-
+        assertThat(outputStream.toString()).contains("Invalid user name or password");
     }
 
 }

@@ -32,9 +32,8 @@ public class BankingService {
         if (chosenOption == 1) {
             String accountNo = prompter.promptAccountNo();
             String password = prompter.promptPassword();
-            customer = customerService.getCustomer(accountNo);
             try {
-                customerService.login(customer);
+                customer = customerService.login(accountNo,password);
             }
             catch (InvalidCredentialsException exception){
                 prompter.printInvalidCredentials();

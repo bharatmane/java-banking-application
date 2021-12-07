@@ -14,7 +14,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class CustomerServiceTest {
+class CustomerServiceTest {
 
     private Customer customer;
     private List<Customer> customers;
@@ -32,37 +32,37 @@ public class CustomerServiceTest {
     @Test
     @DisplayName("Should login with valid credentials")
     void  shouldLoginWhenCorrectCredentialsGiven() throws InvalidCredentialsException {
-
+        String accountNo = "1234";
+        String password = "jack@123";
         String expectedBalance = "235.5";
         //Given
 
         //When
-        customerService.login(customer);
+        customer = customerService.login(accountNo,password);
 
         //Then
-        assertThat(customer.isLoggedIn()).isEqualTo(true);
+        assertThat(customer.isLoggedIn()).isTrue();
     }
     @Test
     @DisplayName("Should throw Invalid Credentials Exception when invalid credentials given")
-    void  shouldThrowExceptionWhenInvalidCredentialsGiven() throws InvalidCredentialsException {
-        Customer customerWithInvalidCredentials = new Customer("1234","jack@125","+919632104315","100.1");
+    void  shouldThrowExceptionWhenInvalidCredentialsGiven() {
+        String accountNo = "1234";
+        String password = "jack@125";
 
         //Given
 
         //When
         assertThrows(InvalidCredentialsException.class, () -> {
-            customerService.login(customerWithInvalidCredentials);
+            customerService.login(accountNo,password);
         });
 
-
-
         //Then
-        assertThat(customerWithInvalidCredentials.isLoggedIn()).isEqualTo(false);
+
     }
 
     @Test
     @DisplayName("Should increase balance when deposited")
-    void  shouldIncreaseBalanceWhenDeposited() throws InsufficientFundsException {
+    void  shouldIncreaseBalanceWhenDeposited() {
 
         String expectedBalance = "235.5";
         //Given

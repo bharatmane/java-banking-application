@@ -14,18 +14,17 @@ public class CustomerService {
     public CustomerService(List<Customer> customers) {
         this.customers = customers;
     }
-    private boolean isValidCredentials(Customer customer) {
-        String accountNo = customer.getAccountNo();
-        String password = customer.getPassword();
+    private Customer getValidCustomer(String accountNo, String password ) {
+
         Customer customerTobeChecked = getCustomer(accountNo);
 
         if(customerTobeChecked != null && customerTobeChecked.comparePassword(password)){
-            customer.setIsLoggedIn(true);
+            customerTobeChecked.setIsLoggedIn(true);
         }
         else{
-            customer.setIsLoggedIn(false);
+            customerTobeChecked.setIsLoggedIn(false);
         }
-        return customer.isLoggedIn();
+        return customerTobeChecked;
     }
     public void withdraw(Customer customer,String withdrawAmount) throws InsufficientFundsException {
         BigDecimal amount = new BigDecimal(withdrawAmount);
@@ -67,8 +66,9 @@ public class CustomerService {
         customer.setIsLoggedIn(false);
     }
 
-    public Customer login(Customer customer) throws InvalidCredentialsException {
-        if(isValidCredentials(customer)) {
+    public Customer login(String accountNo, String password) throws InvalidCredentialsException {
+        Customer customer = getValidCustomer(accountNo,password);
+        if(customer.isLoggedIn()) {
             return customer;
         }
         else{
