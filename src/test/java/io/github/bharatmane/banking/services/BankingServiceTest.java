@@ -2,8 +2,6 @@ package io.github.bharatmane.banking.services;
 
 import io.github.bharatmane.banking.Prompter;
 import io.github.bharatmane.banking.entity.Customer;
-import io.github.bharatmane.banking.exception.InsufficientFundsException;
-import io.github.bharatmane.banking.exception.InvalidCredentialsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,24 +14,22 @@ import java.util.List;
 import java.util.Scanner;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class BankingServiceTest {
+class BankingServiceTest {
     private ByteArrayOutputStream outputStream;
     private PrintStream printStream;
 
     private Prompter prompter;
     private CustomerService customerService;
-    private List<Customer> customers;
 
 
     @BeforeEach
     public void init() {
         outputStream = new ByteArrayOutputStream();
         printStream = new PrintStream(outputStream);
-        customers = new ArrayList<Customer>(Arrays.asList(
-                new Customer("1234","jack@123","+919632104315","100.1"),
-                new Customer("1235","jill@123","+919632104324","200.2")
+        List<Customer> customers = new ArrayList<>(Arrays.asList(
+                new Customer("1234", "jack@123", "+919632104315", "100.1"),
+                new Customer("1235", "jill@123", "+919632104324", "200.2")
         ));
         customerService = new CustomerService(customers);
 
@@ -57,7 +53,7 @@ public class BankingServiceTest {
 
     @Test
     @DisplayName("Should show accounts menu when logged in with correct credentials")
-    void  shouldShowAccountsMenuWhenLoggedInWithCorrectCredentials() throws InvalidCredentialsException {
+    void  shouldShowAccountsMenuWhenLoggedInWithCorrectCredentials() {
         Scanner scanner = new Scanner("1\n1234\njack@123\n1\n");
         prompter = new Prompter(printStream,scanner);
 
@@ -69,7 +65,7 @@ public class BankingServiceTest {
         Customer customer = bankingService.login();
 
         //Then
-        assertThat(customer.isLoggedIn());
+        assertThat(customer.isLoggedIn()).isTrue();
     }
 
     @Test
