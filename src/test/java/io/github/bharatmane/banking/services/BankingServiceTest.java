@@ -2,7 +2,8 @@ package io.github.bharatmane.banking.services;
 
 import io.github.bharatmane.banking.Prompter;
 import io.github.bharatmane.banking.entity.Customer;
-import io.github.bharatmane.banking.exception.InSufficientFundsException;
+import io.github.bharatmane.banking.exception.InsufficientFundsException;
+import io.github.bharatmane.banking.exception.InvalidCredentialsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,14 @@ import java.util.List;
 import java.util.Scanner;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BankingServiceTest {
     private ByteArrayOutputStream outputStream;
     private PrintStream printStream;
+
     private Prompter prompter;
+    private CustomerService customerService;
     private List<Customer> customers;
 
 
@@ -28,9 +32,10 @@ public class BankingServiceTest {
         outputStream = new ByteArrayOutputStream();
         printStream = new PrintStream(outputStream);
         customers = new ArrayList<Customer>(Arrays.asList(
-                new Customer("1234","jack@123","100.1"),
-                new Customer("1235","jill@123","200.2")
+                new Customer("1234","jack@123","+919632104315","100.1"),
+                new Customer("1235","jill@123","+919632104324","200.2")
         ));
+        customerService = new CustomerService(customers);
 
     }
 
@@ -42,7 +47,7 @@ public class BankingServiceTest {
         prompter = new Prompter(printStream,scanner);
 
         //Given
-        BankingService bankingService = new BankingService(customers, prompter);
+        BankingService bankingService = new BankingService(customerService, prompter);
 
         //When
 
@@ -52,12 +57,12 @@ public class BankingServiceTest {
 
     @Test
     @DisplayName("Should show accounts menu when logged in with correct credentials")
-    void  shouldShowAccountsMenuWhenLoggedInWithCorrectCredentials() {
+    void  shouldShowAccountsMenuWhenLoggedInWithCorrectCredentials() throws InvalidCredentialsException {
         Scanner scanner = new Scanner("1\n1234\njack@123\n1\n");
         prompter = new Prompter(printStream,scanner);
 
         //Given
-        BankingService bankingService = new BankingService(customers,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter);
 
         //When
         bankingService.greet();
@@ -69,19 +74,20 @@ public class BankingServiceTest {
 
     @Test
     @DisplayName("Should show invalid login attempt when logged in with incorrect credentials")
-    void  shouldShowInvalidLoginAttemptWhenLoggedInWithIncorrectCredentials(){
-        Scanner scanner = new Scanner("1\njack\njack@125\n1");
+    void  shouldShowInvalidLoginAttemptWhenLoggedInWithIncorrectCredentials()  {
+        Scanner scanner = new Scanner("1\n1234\njack@125\n1");
         prompter = new Prompter(printStream,scanner);
 
         //Given
-        BankingService bankingService = new BankingService(customers,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter);
 
         //When
         bankingService.greet();
         bankingService.login();
 
+
         //Then
-        assertThat(outputStream.toString()).contains("Invalid user name or password");
+
     }
 
 }

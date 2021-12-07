@@ -2,64 +2,67 @@ package io.github.bharatmane.banking.services;
 
 import io.github.bharatmane.banking.Prompter;
 import io.github.bharatmane.banking.entity.Customer;
-import io.github.bharatmane.banking.exception.InSufficientFundsException;
+import io.github.bharatmane.banking.exception.InsufficientFundsException;
+import io.github.bharatmane.banking.exception.InvalidCredentialsException;
 
 import java.util.List;
 
 public class BankingService {
-    private final List<Customer> customers;
+
     private final Prompter prompter;
+    private final CustomerService customerService;
 
 
-    public BankingService(List<Customer> customers, Prompter prompter) {
-        this.customers = customers;
+    public BankingService(CustomerService customerService, Prompter prompter) {
+        this.customerService = customerService;
         this.prompter = prompter;
     }
 
     public int getCustomerCount() {
-        return customers.size();
+        return customerService.getCustomerCount();
     }
 
     public void greet() {
         prompter.greetUser();
     }
 
-    public Customer login() {
+    public Customer login(){
         Customer customer =  null;
         int chosenOption = prompter.promptLogin();
         if (chosenOption == 1) {
-            String userName = prompter.promptUserName();
+            String accountNo = prompter.promptAccountNo();
             String password = prompter.promptPassword();
-
-            customer = customers.stream().filter(c-> c.getAccountNo().equals(userName)).findFirst()
-                    .orElse(null);
-            if(customer == null || customer.isValidCredentials(password) == false){
+            customer = customerService.getCustomer(accountNo);
+            try {
+                customerService.login(customer);
+            }
+            catch (InvalidCredentialsException exception){
                 prompter.printInvalidCredentials();
-                customer = null;
             }
         }
         return customer;
     }
 
-    public void operate(Customer customer) throws InSufficientFundsException {
+    public void operate(Customer customer) throws InsufficientFundsException {
         int chosenOption = prompter.promptAccountMenu();
         processAccountMenu(customer,chosenOption);
     }
-    private void processAccountMenu(Customer customer, int chosenOption) throws InSufficientFundsException {
+    private void processAccountMenu(Customer customer, int chosenOption) throws InsufficientFundsException {
+
         switch(chosenOption){
             case 1:
                 String depositAmount = prompter.promptDeposit();
-                customer.deposit(depositAmount);
+                customerService.deposit(customer,depositAmount);
                 break;
             case 2:
                 String withdrawAmount = prompter.promptWithdraw();
-                customer.withdraw(withdrawAmount);
+                customerService.withdraw(customer,withdrawAmount);
                 break;
             case 3:
-                customer.transfer();
+                customerService.transfer();
                 break;
             case 4:
-                customer.logout();
+                customerService.logout(customer);
                 break;
         }
     }

@@ -42,8 +42,8 @@ public class Prompter {
         return lastInput;
     }
 
-    public String promptUserName() {
-        print("Please Enter User Name");
+    public String promptAccountNo() {
+        print("Please Enter Account Number");
         prompt();
         return lastInput;
     }
@@ -80,5 +80,11 @@ public class Prompter {
 
     public void printInvalidCredentials() {
         print("Invalid user name or password, please try again");
+    }
+
+    public String promptPhoneNumber() {
+        print("Please enter the phone number");
+        prompt();
+        return lastInput;
     }
 }

@@ -67,7 +67,7 @@ public class PrompterTest {
         Prompter prompter = new Prompter(printStream,scanner);
         //When
         prompter.promptLogin();
-        prompter.promptUserName();
+        prompter.promptAccountNo();
 
         //Then
         assertThat(prompter.currentOption()).isEqualTo("jack");
