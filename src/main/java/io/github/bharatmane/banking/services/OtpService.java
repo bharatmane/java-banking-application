@@ -5,8 +5,10 @@ import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.Random;
 
 
 public class OtpService {
@@ -14,9 +16,10 @@ public class OtpService {
     public static final String API_KEY = "SGPkW7Zw5gBzRA3mUuQtlyvDc1qJCXeH908IoL64E2parVMKYOTZE5l8WMSmeFqtghKkdv9cwoUsuj4p";
     public static final String FAST2SMS_API_URL = "https://www.fast2sms.com/dev/bulkV2";
     private HashMap<Integer,String> otpMap;
-
+     Random rand;
     public OtpService(){
         otpMap = new HashMap<>();
+        rand = new Random();
     }
 
     public void sendOTP(String phoneNo) {
@@ -33,8 +36,7 @@ public class OtpService {
 
     public static String generateOTP()
     {
-        int randomPin = (int) (Math.random()*9000)+1000;
-        return String.valueOf(randomPin);
+        return new DecimalFormat("000000").format(new rand.nextInt(999999));
     }
 
     public int getQueueSize() {
