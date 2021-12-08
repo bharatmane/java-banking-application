@@ -1,4 +1,24 @@
-# Problem Statement:
+<h1>
+  <br />
+    TDD KATA : Banking Application
+  <hr />
+
+[![Sonar](https://github.com/sandeshkota/DesignPatterns/actions/workflows/sonar.yml/badge.svg)](https://github.com/bharatmane/java-banking-application/actions/workflows/build.yml)
+
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=ncloc)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=security_rating)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=coverage)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=sqale_index)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=code_smells)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=bugs)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bharatmane_java-banking-application&metric=alert_status)](https://sonarcloud.io/dashboard?id=bharatmane_java-banking-application)
+</h1>
+
+## Problem Statement:
 
 Indian Bank is in operation since 1900. All the work and transactions are recorded manually. Bank wants to get advanced and wants to use technology in order to provide users self-transactions services. In Version 1 of their Banking Software, the bank wants to give support to the following
 
