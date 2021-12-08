@@ -4,9 +4,12 @@ import io.github.bharatmane.banking.Prompter;
 import io.github.bharatmane.banking.entity.Customer;
 import io.github.bharatmane.banking.exception.InsufficientFundsException;
 import io.github.bharatmane.banking.exception.InvalidMenuChoiceException;
+import io.github.bharatmane.banking.exception.InvalidOtpException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -17,6 +20,7 @@ import java.util.Scanner;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class BankingServiceTest {
     private ByteArrayOutputStream outputStream;
@@ -24,10 +28,14 @@ class BankingServiceTest {
 
     private Prompter prompter;
     private CustomerService customerService;
-
+    @Mock
+    OtpService mockOtpService;
 
     @BeforeEach
     public void init() {
+
+        mockOtpService = mock(OtpService.class);
+
         outputStream = new ByteArrayOutputStream();
         printStream = new PrintStream(outputStream);
         List<Customer> customers = new ArrayList<>(Arrays.asList(
@@ -44,7 +52,7 @@ class BankingServiceTest {
         prompter = new Prompter(printStream,scanner);
 
         //Given
-        BankingService bankingService = new BankingService(customerService, prompter);
+        BankingService bankingService = new BankingService(customerService, prompter,mockOtpService);
 
         //When
 
@@ -59,7 +67,7 @@ class BankingServiceTest {
         prompter = new Prompter(printStream,scanner);
 
         //Given
-        BankingService bankingService = new BankingService(customerService,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter,mockOtpService);
 
         //When
         bankingService.greet();
@@ -76,7 +84,7 @@ class BankingServiceTest {
         prompter = new Prompter(printStream,scanner);
 
         //Given
-        BankingService bankingService = new BankingService(customerService,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter,mockOtpService);
 
         //When
         bankingService.greet();
@@ -93,7 +101,7 @@ class BankingServiceTest {
         prompter = new Prompter(printStream,scanner);
 
         //Given
-        BankingService bankingService = new BankingService(customerService,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter,mockOtpService);
 
         //When
         bankingService.greet();
@@ -105,12 +113,12 @@ class BankingServiceTest {
 
     @Test
     @DisplayName("Should be logged out when log out option chosen")
-    void  shouldBeLoggedOutWhenLogoutOptionChosen() throws InsufficientFundsException, InvalidMenuChoiceException {
+    void  shouldBeLoggedOutWhenLogoutOptionChosen() throws InsufficientFundsException, InvalidMenuChoiceException, InvalidOtpException {
         Scanner scanner = new Scanner("1\n1234\njack@123\n4\n");
         prompter = new Prompter(printStream,scanner);
 
         //Given
-        BankingService bankingService = new BankingService(customerService,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter,mockOtpService);
 
         //When
         bankingService.greet();
@@ -123,12 +131,12 @@ class BankingServiceTest {
 
     @Test
     @DisplayName("Should decrease balance when withdrawn")
-    void  shouldDecreaseBalanceBalanceWhenWithdrawn() throws InsufficientFundsException, InvalidMenuChoiceException {
+    void  shouldDecreaseBalanceBalanceWhenWithdrawn() throws InsufficientFundsException, InvalidMenuChoiceException, InvalidOtpException {
         Scanner scanner = new Scanner("1\n1234\njack@123\n2\n50\n4");
         prompter = new Prompter(printStream,scanner);
 
         //Given
-        BankingService bankingService = new BankingService(customerService,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter,mockOtpService);
 
         //When
         bankingService.greet();
@@ -143,12 +151,13 @@ class BankingServiceTest {
 
     @Test
     @DisplayName("Should decrease balance of customer 1 when transferred to customer 2")
-    void  shouldDecreaseBalanceOfCustomer1WhenTransferredToCustomer2() throws InsufficientFundsException, InvalidMenuChoiceException {
-        Scanner scanner = new Scanner("1\n1234\njack@123\n1\n100\n3\n1235\n100\n4");
+    void  shouldDecreaseBalanceOfCustomer1WhenTransferredToCustomer2() throws InsufficientFundsException, InvalidMenuChoiceException, InvalidOtpException {
+        Scanner scanner = new Scanner("1\n1234\njack@123\n1\n100\n3\n1235\n100\n12345\n4");
         prompter = new Prompter(printStream,scanner);
+        mockOtpService();
 
         //Given
-        BankingService bankingService = new BankingService(customerService,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter,mockOtpService);
 
         //When
         bankingService.greet();
@@ -160,33 +169,39 @@ class BankingServiceTest {
 
     }
 
+    private void mockOtpService() throws InvalidOtpException {
+        when(mockOtpService.generateOTP()).thenReturn(null);
+        when(mockOtpService.sendOTP(ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(null);
+        when(mockOtpService.validateOtp(ArgumentMatchers.any(),ArgumentMatchers.any())).thenReturn(true);
+    }
+
     @Test
     @DisplayName("Should throw exception when transferred more than balance")
-    void  shouldThrowInsufficientFundsExceptionWhenTransferredMoreThanBalance() throws InvalidMenuChoiceException {
-        Scanner scanner = new Scanner("1\n1234\njack@123\n3\n1235\n200\n4");
+    void  shouldThrowInsufficientFundsExceptionWhenTransferredMoreThanBalance() throws InvalidMenuChoiceException, InvalidOtpException {
+        Scanner scanner = new Scanner("1\n1234\njack@123\n3\n1235\n200\n12345\n4");
         prompter = new Prompter(printStream,scanner);
 
+        mockOtpService();
+
         //Given
-        BankingService bankingService = new BankingService(customerService,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter,mockOtpService);
 
         //When
         bankingService.greet();
         Customer customer = bankingService.login();
 
         //Then
-        assertThrows(InsufficientFundsException.class, () -> {
-            bankingService.operate(customer);
-        });
+        assertThrows(InsufficientFundsException.class, () -> bankingService.operate(customer));
     }
 
     @Test
     @DisplayName("Should increase balance of customer 2 when transferred to customer 2")
-    void  shouldIncreaseBalanceOfCustomer2WhenTransferredToCustomer2() throws InsufficientFundsException, InvalidMenuChoiceException {
-        Scanner scanner = new Scanner("1\n1234\njack@123\n1\n100\n3\n1235\n100\n4");
+    void  shouldIncreaseBalanceOfCustomer2WhenTransferredToCustomer2() throws InsufficientFundsException, InvalidMenuChoiceException, InvalidOtpException {
+        Scanner scanner = new Scanner("1\n1234\njack@123\n1\n100\n3\n1235\n100\n12345\n4");
         prompter = new Prompter(printStream,scanner);
-
+        mockOtpService();
         //Given
-        BankingService bankingService = new BankingService(customerService,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter,mockOtpService);
 
         //When
         bankingService.greet();
@@ -206,7 +221,7 @@ class BankingServiceTest {
         prompter = new Prompter(printStream,scanner);
 
         //Given
-        BankingService bankingService = new BankingService(customerService,prompter);
+        BankingService bankingService = new BankingService(customerService,prompter,mockOtpService);
 
         //When
         bankingService.greet();

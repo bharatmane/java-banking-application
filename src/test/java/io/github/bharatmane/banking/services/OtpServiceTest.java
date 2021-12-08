@@ -1,29 +1,23 @@
 package io.github.bharatmane.banking.services;
 
 
-import kong.unirest.GetRequest;
-import kong.unirest.HttpResponse;
-import kong.unirest.JsonNode;
-import kong.unirest.Unirest;
-import kong.unirest.json.JSONObject;
+import io.github.bharatmane.banking.exception.InvalidCredentialsException;
+import io.github.bharatmane.banking.exception.InvalidOtpException;
+import io.github.bharatmane.banking.wrapper.UnirestWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.text.MessageFormat;
-
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
-@PrepareForTest({ Unirest.class})
-@RunWith(PowerMockRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 class OtpServiceTest {
 
     private OtpService otpService;
@@ -32,47 +26,59 @@ class OtpServiceTest {
 
 
     @Mock
-    private GetRequest getRequest;
-
-    @Mock
-    private HttpResponse<JsonNode> httpResponse;
-
-    @Mock
-    private JSONObject jsonObject;
+    private UnirestWrapper unirestWrapper;
 
 
     @BeforeEach
     public void init() {
-        //this.otpService = new OtpService();
+        unirestWrapper = mock(UnirestWrapper.class);
+        this.otpService = new OtpService(unirestWrapper);
     }
+
     @Test
     @DisplayName("Should have OTP count 1 when OTP was sent")
     void  shouldHaveOtpCount1WhenOtpSent() {
-        //To be implemented
 
-//        String baseUrl =  MessageFormat.format( "{0}?authorization={1}"
-//                ,FAST2SMS_API_URL,API_KEY);
-//
-//        String otp = OtpService.generateOTP();
-//        String parameters = MessageFormat.format("&variables_values={0}&route=otp&numbers={1}",otp,"9632104315");
-//
-//        try (MockedStatic mocked = mockStatic(Unirest.class)) {
-//            mocked.when(() -> Unirest.get("param1")).thenReturn(getRequest);
-//        }
-        //mockStatic(Unirest.class);
-//        Mockito.when(Unirest.get(ArgumentMatchers.anyString())).thenReturn(getRequest);
-//        when(getRequest.asJson()).thenReturn(httpResponse);
-//        when(httpResponse.getBody().getObject()).thenReturn(jsonObject);
-//        when(jsonObject.getString("request_id")).thenReturn("v9lexpf7io5a8m4");
-//
-//        //when(Unirest.get(baseUrl + parameters)).thenReturn(getRequest);
-//
-//
-//        //Given
-//        otpService.sendOTP("9632104315");
-//        //When
-//
-//        //Then
-//        assertThat(otpService.getQueueSize()).isEqualTo(1);
+        String otp = otpService.generateOTP();
+        when(unirestWrapper.sendOTP(otp,"9632104315")).thenReturn("v9lexpf7io5a8m4");
+
+        //Given
+        otpService.sendOTP(otp,"9632104315");
+        //When
+
+        //Then
+        assertThat(otpService.getQueueSize()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Should validate OTP when compared with requestId")
+    void  shouldValidateOtpWhenComparedWithRequestId() throws InvalidOtpException {
+
+        String otp = otpService.generateOTP();
+        String requestId = "v9lexpf7io5a8m4";
+        when(unirestWrapper.sendOTP(otp,"9632104315")).thenReturn(requestId);
+
+        //Given
+        otpService.sendOTP(otp,"9632104315");
+        //When
+
+        //Then
+        assertThat(otpService.validateOtp(otp,requestId)).isTrue();
+    }
+    @Test
+    @DisplayName("Should throw invalid Otp exception when given wrong otp")
+    void  shouldThrowInvalidOtpExceptionWhenGivenWrongOtp() {
+
+        String otp = otpService.generateOTP();
+        String wrongOtp = "12345";
+        String requestId = "v9lexpf7io5a8m4";
+        when(unirestWrapper.sendOTP(otp,"9632104315")).thenReturn(requestId);
+
+        //Given
+        otpService.sendOTP(otp,"9632104315");
+        //When
+
+        //Then
+        assertThrows(InvalidOtpException.class, () -> otpService.validateOtp(wrongOtp,requestId));
     }
 }

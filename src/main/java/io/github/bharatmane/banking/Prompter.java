@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Prompter {
     public static final int MENU_OPTION_LOGOUT = 4;
     private final PrintStream stdOut;
-    private Scanner scanner;
+    private final Scanner scanner;
     private String lastInput;
     public Prompter(PrintStream stdOut, Scanner scanner) {
         this.stdOut = stdOut;
@@ -94,5 +94,11 @@ public class Prompter {
 
     public void promptGoodBye() {
         print("Thank you for banking with Indian Bank, visit again.");
+    }
+
+    public String promptOtp() {
+        print("Please enter the OTP that was sent your phone number");
+        prompt();
+        return lastInput;
     }
 }
