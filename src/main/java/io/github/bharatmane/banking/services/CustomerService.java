@@ -40,14 +40,7 @@ public class CustomerService {
         boolean isAvailable;
         BigDecimal bigDecimalWithdrawAmount = new BigDecimal(withdrawAmount);
 
-        if (bigDecimalWithdrawAmount.compareTo(customer.getAccountBalance()) == 1)
-        {
-            isAvailable = false;
-        }
-        else
-        {
-            isAvailable = true;
-        }
+        isAvailable = bigDecimalWithdrawAmount.compareTo(customer.getAccountBalance()) != 1;
         return isAvailable;
     }
 

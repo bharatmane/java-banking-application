@@ -15,7 +15,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 
-public class PrompterTest {
+class PrompterTest {
     private ByteArrayOutputStream outputStream;
     private PrintStream printStream;
 
