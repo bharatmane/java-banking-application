@@ -61,6 +61,23 @@ class CustomerServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw Invalid Credentials Exception when invalid account no")
+    void  shouldThrowExceptionWhenInvalidAccountNoGiven() {
+        String accountNo = "1237";
+        String password = "jack@125";
+
+        //Given
+
+        //When
+        assertThrows(InvalidCredentialsException.class, () -> {
+            customerService.login(accountNo,password);
+        });
+
+        //Then
+
+    }
+
+    @Test
     @DisplayName("Should increase balance when deposited")
     void  shouldIncreaseBalanceWhenDeposited() {
 

@@ -9,26 +9,24 @@ import java.util.List;
 
 public class CustomerService {
     private final List<Customer> customers;
-    private boolean isLoggedIn;
 
     public CustomerService(List<Customer> customers) {
         this.customers = customers;
     }
-    private Customer getValidCustomer(String accountNo, String password ) {
+    private Customer getValidCustomer(String accountNo, String password ) throws InvalidCredentialsException {
 
         Customer customerTobeChecked = getCustomer(accountNo);
+        if(customerTobeChecked == null){
+            throw new InvalidCredentialsException("Invalid credentials, please try with valid account number and password");
+        }
 
-        if(customerTobeChecked != null && customerTobeChecked.comparePassword(password)){
-            customerTobeChecked.setIsLoggedIn(true);
-        }
-        else{
-            customerTobeChecked.setIsLoggedIn(false);
-        }
+        customerTobeChecked.setIsLoggedIn(customerTobeChecked.comparePassword(password));
+
         return customerTobeChecked;
     }
     public void withdraw(Customer customer,String withdrawAmount) throws InsufficientFundsException {
-        BigDecimal amount = new BigDecimal(withdrawAmount);
-        if(checkAccountForAvailableFunds(customer,withdrawAmount) == true) {
+
+        if(checkAccountForAvailableFunds(customer, withdrawAmount)) {
             BigDecimal accountBalance = customer.getAccountBalance();
             customer.setAccountBalance(accountBalance.subtract(new BigDecimal(withdrawAmount)));
         }
@@ -59,7 +57,27 @@ public class CustomerService {
         customer.setAccountBalance(accountBalance.add(new BigDecimal(amount)));
     }
 
-    public void transfer() {
+    public void transfer(Customer customer, String transferToAccountNo, String amount) throws InsufficientFundsException {
+        Customer transferToCustomer = getCustomer(transferToAccountNo);
+        BigDecimal transferAmount = new BigDecimal(amount);
+
+        if(checkAccountForAvailableFunds(customer,amount) == true) {
+            deductBalance(customer,transferAmount);
+            increaseBalance(transferToCustomer,transferAmount);
+        }
+        else{
+            throw new InsufficientFundsException("Insufficient funds, please try with lower amount");
+        }
+    }
+
+    private void increaseBalance(Customer transferToCustomer, BigDecimal transferAmount) {
+        BigDecimal accountBalance = transferToCustomer.getAccountBalance();
+        transferToCustomer.setAccountBalance(accountBalance.add(transferAmount));
+    }
+
+    private void deductBalance(Customer customer, BigDecimal transferAmount) {
+        BigDecimal accountBalance = customer.getAccountBalance();
+        customer.setAccountBalance(accountBalance.subtract(transferAmount));
     }
 
     public void logout(Customer customer) {

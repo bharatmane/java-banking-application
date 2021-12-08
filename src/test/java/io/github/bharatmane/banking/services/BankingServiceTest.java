@@ -3,6 +3,7 @@ package io.github.bharatmane.banking.services;
 import io.github.bharatmane.banking.Prompter;
 import io.github.bharatmane.banking.entity.Customer;
 import io.github.bharatmane.banking.exception.InsufficientFundsException;
+import io.github.bharatmane.banking.exception.InvalidMenuChoiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BankingServiceTest {
     private ByteArrayOutputStream outputStream;
@@ -52,7 +54,7 @@ class BankingServiceTest {
 
     @Test
     @DisplayName("Should be logged in with correct credentials")
-    void  shouldBeLoggedInWithCorrectCredentials() {
+    void  shouldBeLoggedInWithCorrectCredentials() throws InvalidMenuChoiceException {
         Scanner scanner = new Scanner("1\n1234\njack@123\n1\n");
         prompter = new Prompter(printStream,scanner);
 
@@ -68,8 +70,25 @@ class BankingServiceTest {
     }
 
     @Test
+    @DisplayName("Should exit with message when chosen option 2")
+    void  shouldExitWithMessageWhenChosenOptionAs2() throws InvalidMenuChoiceException {
+        Scanner scanner = new Scanner("2\n");
+        prompter = new Prompter(printStream,scanner);
+
+        //Given
+        BankingService bankingService = new BankingService(customerService,prompter);
+
+        //When
+        bankingService.greet();
+        Customer customer = bankingService.login();
+
+        //Then
+        assertThat(outputStream.toString()).contains("Thank you for banking with Indian Bank");
+    }
+
+    @Test
     @DisplayName("Should show invalid login attempt when logged in with incorrect credentials")
-    void  shouldShowInvalidLoginAttemptWhenLoggedInWithIncorrectCredentials()  {
+    void  shouldShowInvalidLoginAttemptWhenLoggedInWithIncorrectCredentials() throws InvalidMenuChoiceException {
         Scanner scanner = new Scanner("1\n1234\njack@125\n1");
         prompter = new Prompter(printStream,scanner);
 
@@ -86,7 +105,7 @@ class BankingServiceTest {
 
     @Test
     @DisplayName("Should be logged out when log out option chosen")
-    void  shouldBeLoggedOutWhenLogoutOptionChosen() throws InsufficientFundsException {
+    void  shouldBeLoggedOutWhenLogoutOptionChosen() throws InsufficientFundsException, InvalidMenuChoiceException {
         Scanner scanner = new Scanner("1\n1234\njack@123\n4\n");
         prompter = new Prompter(printStream,scanner);
 
@@ -103,8 +122,28 @@ class BankingServiceTest {
     }
 
     @Test
+    @DisplayName("Should decrease balance when withdrawn")
+    void  shouldDecreaseBalanceBalanceWhenWithdrawn() throws InsufficientFundsException, InvalidMenuChoiceException {
+        Scanner scanner = new Scanner("1\n1234\njack@123\n2\n50\n4");
+        prompter = new Prompter(printStream,scanner);
+
+        //Given
+        BankingService bankingService = new BankingService(customerService,prompter);
+
+        //When
+        bankingService.greet();
+        Customer customer = bankingService.login();
+        bankingService.operate(customer);
+
+        //Then
+        assertThat(customer.getAccountBalance()).isEqualTo("50.1");
+
+    }
+
+
+    @Test
     @DisplayName("Should decrease balance of customer 1 when transferred to customer 2")
-    void  shouldDecreaseBalanceOfCustomer1WhenTransferredToCustomer2() throws InsufficientFundsException {
+    void  shouldDecreaseBalanceOfCustomer1WhenTransferredToCustomer2() throws InsufficientFundsException, InvalidMenuChoiceException {
         Scanner scanner = new Scanner("1\n1234\njack@123\n1\n100\n3\n1235\n100\n4");
         prompter = new Prompter(printStream,scanner);
 
@@ -122,8 +161,27 @@ class BankingServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception when transferred more than balance")
+    void  shouldThrowInsufficientFundsExceptionWhenTransferredMoreThanBalance() throws InvalidMenuChoiceException {
+        Scanner scanner = new Scanner("1\n1234\njack@123\n3\n1235\n200\n4");
+        prompter = new Prompter(printStream,scanner);
+
+        //Given
+        BankingService bankingService = new BankingService(customerService,prompter);
+
+        //When
+        bankingService.greet();
+        Customer customer = bankingService.login();
+
+        //Then
+        assertThrows(InsufficientFundsException.class, () -> {
+            bankingService.operate(customer);
+        });
+    }
+
+    @Test
     @DisplayName("Should increase balance of customer 2 when transferred to customer 2")
-    void  shouldIncreaseBalanceOfCustomer2WhenTransferredToCustomer2() throws InsufficientFundsException {
+    void  shouldIncreaseBalanceOfCustomer2WhenTransferredToCustomer2() throws InsufficientFundsException, InvalidMenuChoiceException {
         Scanner scanner = new Scanner("1\n1234\njack@123\n1\n100\n3\n1235\n100\n4");
         prompter = new Prompter(printStream,scanner);
 
@@ -139,5 +197,22 @@ class BankingServiceTest {
         //Then
         assertThat(customer2.getAccountBalance()).isEqualTo("300.2");
 
+    }
+
+    @Test
+    @DisplayName("Should throw invalid option exception when entered incorrect login option")
+    void  shouldThrowInvalidOptionExceptionWhenIncorrectOptionGiven() {
+        Scanner scanner = new Scanner("4\n1234\njack@123\n3\n1235\n200\n4");
+        prompter = new Prompter(printStream,scanner);
+
+        //Given
+        BankingService bankingService = new BankingService(customerService,prompter);
+
+        //When
+        bankingService.greet();
+        //Then
+        assertThrows(InvalidMenuChoiceException.class, () -> {
+            Customer customer = bankingService.login();
+        });
     }
 }

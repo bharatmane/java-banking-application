@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 public class Prompter {
+    public static final int MENU_OPTION_LOGOUT = 4;
     private final PrintStream stdOut;
     private Scanner scanner;
     private String lastInput;
@@ -82,9 +83,19 @@ public class Prompter {
         print("Invalid user name or password, please try again");
     }
 
-    public String promptPhoneNumber() {
-        print("Please enter the phone number");
+    public String promptTransfer() {
+        print("Please enter the amount to transfer");
         prompt();
         return lastInput;
+    }
+
+    public String promptTransferAccountNo() {
+        print("Please enter the account number to transfer");
+        prompt();
+        return lastInput;
+    }
+
+    public void promptGoodBye() {
+        print("Thank you for banking with Indian Bank, visit again.");
     }
 }
