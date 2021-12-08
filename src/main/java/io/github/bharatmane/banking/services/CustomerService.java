@@ -61,7 +61,7 @@ public class CustomerService {
         Customer transferToCustomer = getCustomer(transferToAccountNo);
         BigDecimal transferAmount = new BigDecimal(amount);
 
-        if(checkAccountForAvailableFunds(customer,amount) == true) {
+        if(checkAccountForAvailableFunds(customer,amount) ) {
             deductBalance(customer,transferAmount);
             increaseBalance(transferToCustomer,transferAmount);
         }

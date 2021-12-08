@@ -10,7 +10,6 @@ public class Prompter {
     private final PrintStream stdOut;
     private Scanner scanner;
     private String lastInput;
-    private Customer currentCustomer;
     public Prompter(PrintStream stdOut, Scanner scanner) {
         this.stdOut = stdOut;
         this.scanner = scanner;

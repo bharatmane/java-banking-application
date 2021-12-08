@@ -21,6 +21,9 @@ public class Customer {
     public String getAccountNo() {
         return this.bankAccountNo;
     }
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
     public BigDecimal getAccountBalance() {
         return accountBalance;
     }

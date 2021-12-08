@@ -24,7 +24,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @PrepareForTest({ Unirest.class})
 @RunWith(PowerMockRunner.class)
-public class OtpServiceTest {
+class OtpServiceTest {
 
     private OtpService otpService;
     public static final String API_KEY = "SGPkW7Zw5gBzRA3mUuQtlyvDc1qJCXeH908IoL64E2parVMKYOTZE5l8WMSmeFqtghKkdv9cwoUsuj4p";
@@ -48,6 +48,8 @@ public class OtpServiceTest {
     @Test
     @DisplayName("Should have OTP count 1 when OTP was sent")
     void  shouldHaveOtpCount1WhenOtpSent() {
+        //To be implemented
+
 //        String baseUrl =  MessageFormat.format( "{0}?authorization={1}"
 //                ,FAST2SMS_API_URL,API_KEY);
 //

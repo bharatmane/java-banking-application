@@ -1,6 +1,5 @@
 package io.github.bharatmane.banking.services;
 
-import com.google.gson.JsonObject;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
@@ -17,7 +16,7 @@ public class OtpService {
     private HashMap<Integer,String> otpMap;
 
     public OtpService(){
-        otpMap = new HashMap<Integer,String>();
+        otpMap = new HashMap<>();
     }
 
     public void sendOTP(String phoneNo) {
