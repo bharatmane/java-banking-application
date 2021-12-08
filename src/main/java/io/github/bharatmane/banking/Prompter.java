@@ -23,7 +23,7 @@ public class Prompter {
     }
 
     private void prompt() {
-        stdOut.println("> ");
+        stdOut.print("> ");
         lastInput = scanner.nextLine();
     }
 
