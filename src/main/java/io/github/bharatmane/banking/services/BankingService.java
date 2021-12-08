@@ -38,7 +38,7 @@ public class BankingService {
             throw new InvalidMenuChoiceException("Invalid choice, please enter correct option");
         }
 
-        if(mainMenu == MainMenu.Login) {
+        if(mainMenu == MainMenu.LOGIN) {
             customer = processLogin();
         }
         else{
@@ -66,26 +66,26 @@ public class BankingService {
         {
             accountMenu = AccountMenu.values()[prompter.promptAccountMenu() - 1];
             processAccountMenu(customer,accountMenu);
-        }   while(accountMenu != AccountMenu.Logout);
+        }   while(accountMenu != AccountMenu.LOGOUT);
 
     }
     private void processAccountMenu(Customer customer, AccountMenu accountMenu) throws InsufficientFundsException {
 
         switch(accountMenu){
-            case Deposit:
+            case DEPOSIT:
                 String depositAmount = prompter.promptDeposit();
                 customerService.deposit(customer,depositAmount);
                 break;
-            case Withdraw:
+            case WITHDRAW:
                 String withdrawAmount = prompter.promptWithdraw();
                 customerService.withdraw(customer,withdrawAmount);
                 break;
-            case Transfer:
+            case TRANSFER:
                 String transferAccountNo = prompter.promptTransferAccountNo();
                 String transferAmount = prompter.promptTransfer();
                 customerService.transfer(customer,transferAccountNo,transferAmount);
                 break;
-            case Logout:
+            case LOGOUT:
                 customerService.logout(customer);
                 break;
         }
