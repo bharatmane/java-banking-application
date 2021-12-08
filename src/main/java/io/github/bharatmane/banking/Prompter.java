@@ -1,7 +1,5 @@
 package io.github.bharatmane.banking;
 
-import io.github.bharatmane.banking.entity.Customer;
-
 import java.io.PrintStream;
 import java.util.Scanner;
 

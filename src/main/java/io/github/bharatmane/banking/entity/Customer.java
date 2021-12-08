@@ -15,7 +15,7 @@ public class Customer {
         this.bankAccountNo = bankAccountNo;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.accountBalance = new BigDecimal(accountBalance);;
+        this.accountBalance = new BigDecimal(accountBalance);
     }
 
     public String getAccountNo() {
